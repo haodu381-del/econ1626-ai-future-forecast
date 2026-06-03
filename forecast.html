@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 2030: Australia's Labour Market Forecast</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --text: #1b1d2a;
+      --muted: #5c6270;
+      --line: #e0e4ef;
+      --blue: #283593;
+      --blue2: #4f63d8;
+      --soft: #eef1ff;
+      --green: #1b7f5c;
+      --orange: #b85b00;
+      --red: #b3261e;
+      --shadow: 0 14px 35px rgba(28, 35, 80, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: var(--blue2); }
+
+    header {
+      background: linear-gradient(135deg, #0b0f3f 0%, #283593 60%, #6574ff 100%);
+      color: white;
+      padding: 64px 20px 80px;
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .topline {
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.86;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 4.8rem);
+      line-height: 1.05;
+      margin: 0 0 22px;
+      max-width: 900px;
+    }
+
+    .subtitle {
+      font-size: 1.18rem;
+      max-width: 780px;
+      opacity: 0.93;
+      margin-bottom: 30px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 18px;
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card strong {
+      display: block;
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    nav {
+      background: rgba(255,255,255,0.96);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav .wrap {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 12px 20px;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+
+    nav a:hover { background: var(--soft); }
+
+    main { padding: 40px 20px 70px; }
+
+    section {
+      margin: 0 auto 34px;
+      max-width: 1120px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      line-height: 1.15;
+    }
+
+    h3 {
+      margin: 26px 0 10px;
+      font-size: 1.26rem;
+    }
+
+    .lead {
+      font-size: 1.08rem;
+      color: #2b2f3f;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--soft);
+      color: var(--blue);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .mini h3 { margin-top: 0; }
+
+    .muted { color: var(--muted); }
+
+    .chart-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 360px;
+    }
+
+    canvas { max-height: 330px; }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 20px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.active, button:hover {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 0.96rem;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th { background: #f2f4fb; }
+
+    .scenario {
+      border-left: 6px solid var(--blue2);
+    }
+
+    .scenario.upside { border-left-color: var(--green); }
+    .scenario.downside { border-left-color: var(--red); }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .kpi .mini strong {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .slider-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    input[type="range"] { width: 100%; }
+
+    .result-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin: 4px 0;
+    }
+
+    .policy-result {
+      background: #f6f7ff;
+      border: 1px solid #d9defe;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .note {
+      border-left: 4px solid var(--orange);
+      background: #fff7ee;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 18px 0;
+    }
+
+    .references li { margin-bottom: 12px; }
+
+    footer {
+      background: #0b0f3f;
+      color: white;
+      padding: 28px 20px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid, .grid-2, .grid-3, .kpi, .slider-wrap {
+        grid-template-columns: 1fr;
+      }
+      header { padding-top: 44px; }
+      .card { padding: 22px; }
+      nav { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topline">ECON1626 · AI Future Forecast · Interactive Web Essay</div>
+      <h1>AI 2030: How AI Could Reshape Australia's Labour Market</h1>
+      <p class="subtitle">
+        A student-style forecast about productivity, jobs, wages and policy choices. Inspired by <em>AI 2027</em>, but focused on what a fast AI transition could mean for Australia between 2027 and 2030.
+      </p>
+      <div class="hero-grid">
+        <div class="hero-card">
+          <strong>Thesis</strong>
+          AI will change tasks inside jobs before it replaces whole occupations.
+        </div>
+        <div class="hero-card">
+          <strong>Forecast</strong>
+          Productivity gains are possible, but they will be uneven without training and trust.
+        </div>
+        <div class="hero-card">
+          <strong>Policy</strong>
+          Australia needs practical AI skills, worker voice, data governance and human review.
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="wrap">
+      <a href="#thesis">Thesis</a>
+      <a href="#channels">Economic Channels</a>
+      <a href="#visuals">Interactive Visuals</a>
+      <a href="#scenarios">Scenarios</a>
+      <a href="#policy">Policy Playbook</a>
+      <a href="#methods">Methods</a>
+      <a href="#references">References</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="thesis" class="card">
+      <span class="tag">Landing / Thesis</span>
+      <h2>My main argument</h2>
+      <p class="lead">
+        Artificial intelligence is often described as if it will suddenly remove everyone’s job. I think that is too simple. For Australia, the more realistic change by 2030 is that AI will reorganise tasks inside many jobs. Some workers will become faster and more productive, especially in services, finance, education, health administration, government and professional work. At the same time, the gains may not be shared equally.
+      </p>
+      <p>
+        This website is inspired by <a href="https://ai-2027.com/summary" target="_blank" rel="noopener"><em>AI 2027</em></a>. That project presents a fast-moving scenario where advanced AI systems appear earlier than many people expect, including expert-human-level AI systems in early 2027 and a pathway toward much more capable systems by the end of 2027. I do not treat this as a guaranteed prediction. I use it as a stress test: if AI capability moves faster than normal policy systems, Australia needs to prepare before the labour market pressure becomes obvious.
+      </p>
+      <p>
+        My thesis is that AI could lift Australia’s productivity by 2030, but only if adoption is matched with skills, trust and regulation. If Australia only focuses on cost-cutting, AI could increase inequality, reduce entry-level opportunities and create more workplace surveillance.
+      </p>
+      <div class="note">
+        <strong>Plain version:</strong> AI is not just a job destroyer. It is more like a task reshaper. The real question is who gets the benefit: workers, firms, consumers, or only the largest technology adopters.
+      </div>
+    </section>
+
+    <section id="channels" class="card">
+      <span class="tag">Capabilities → Economic Channels</span>
+      <h2>How AI capability becomes an economic impact</h2>
+      <p>
+        AI does not affect the economy by magic. It works through channels. In this forecast, I focus on four channels: productivity, task automation, wages and industry structure.
+      </p>
+      <div class="grid-2">
+        <div class="mini">
+          <h3>1. Productivity</h3>
+          <p>
+            AI can help workers write, code, research, summarise, analyse data and answer customers faster. This can increase output per hour, which is important because weak productivity growth has been a long-running concern in Australia.
+          </p>
+        </div>
+        <div class="mini">
+          <h3>2. Task automation</h3>
+          <p>
+            AI changes tasks before it changes full jobs. A legal assistant, accountant or marketing worker may keep the same job title, but part of their daily work may be done with AI support.
+          </p>
+        </div>
+        <div class="mini">
+          <h3>3. Wages and inequality</h3>
+          <p>
+            Workers who can use AI well may become more valuable. Workers without training may face weaker bargaining power, more monitoring or fewer junior learning opportunities.
+          </p>
+        </div>
+        <div class="mini">
+          <h3>4. Industry structure</h3>
+          <p>
+            Large firms can adopt AI faster because they have data, money and technical teams. Small businesses may benefit too, but only if tools are affordable and rules are clear.
+          </p>
+        </div>
+      </div>
+      <h3>Evidence I use</h3>
+      <p>
+        The Australian Bureau of Statistics reported that business AI R&amp;D spending rose to $668.3 million in 2023–24, compared with $276.3 million in 2021–22. This suggests Australian firms are already increasing investment in AI, even before many labour market effects are fully visible. The Australian Government’s National AI Plan also frames AI as part of a more competitive, productive and resilient economy.
+      </p>
+    </section>
+
+    <section id="visuals" class="card">
+      <span class="tag">Interactive Data Visuals</span>
+      <h2>Explore the forecast</h2>
+      <p class="muted">
+        These visuals are simple forecasting tools, not official predictions. I created the indices to make the economic logic easier to see. The assumptions are explained in the Methods section.
+      </p>
+
+      <div class="grid-2">
+        <div class="chart-box">
+          <h3>Scenario adoption index, 2026–2030</h3>
+          <p class="muted">100 means AI is widely used in many everyday work tasks.</p>
+          <canvas id="scenarioChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Task exposure by industry</h3>
+          <p class="muted">Higher score means more digital, text or data tasks are exposed to AI support.</p>
+          <canvas id="industryChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="box-shadow:none; margin-top:22px; background:#fbfcff;">
+        <h3>Mini simulation: policy choices</h3>
+        <p>
+          Move the sliders to test the argument. In my model, AI adoption alone increases productivity, but training and governance decide whether the benefits are shared more fairly.
+        </p>
+        <div class="slider-wrap">
+          <div>
+            <label for="training"><strong>Training investment</strong>: <span id="trainingValue">60</span>/100</label>
+            <input id="training" type="range" min="0" max="100" value="60" />
+          </div>
+          <div>
+            <label for="governance"><strong>Governance and trust</strong>: <span id="governanceValue">55</span>/100</label>
+            <input id="governance" type="range" min="0" max="100" value="55" />
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="mini">
+            <span class="muted">Estimated productivity gain</span>
+            <div class="result-number"><span id="productivityOut">8.5</span>%</div>
+            <small>By 2030, compared with low-AI adoption.</small>
+          </div>
+          <div class="mini">
+            <span class="muted">Inequality risk</span>
+            <div class="result-number"><span id="inequalityOut">33</span>/100</div>
+            <small>Lower is better.</small>
+          </div>
+          <div class="mini">
+            <span class="muted">Worker trust</span>
+            <div class="result-number"><span id="trustOut">58</span>/100</div>
+            <small>Higher means smoother adoption.</small>
+          </div>
+          <div class="mini">
+            <span class="muted">Policy score</span>
+            <div class="result-number"><span id="policyOut">B</span></div>
+            <small>My simple grade for the policy mix.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scenarios" class="card">
+      <span class="tag">Scenarios 2027–2030</span>
+      <h2>Three possible futures</h2>
+      <p>
+        The point of scenarios is not to guess one perfect future. It is to show what changes when the assumptions change. I use three scenarios: baseline, upside and downside.
+      </p>
+
+      <div class="grid-3">
+        <div class="mini scenario">
+          <h3>Baseline: uneven adoption</h3>
+          <p>
+            AI adoption grows steadily but unevenly. Banks, large firms, universities and government agencies use AI more quickly. Small businesses and less resourced workers adopt AI more slowly.
+          </p>
+          <p><strong>Likely result:</strong> moderate productivity gains, but a wider gap between AI-confident workers and workers who receive little training.</p>
+        </div>
+        <div class="mini scenario upside">
+          <h3>Upside: productivity with inclusion</h3>
+          <p>
+            Australia invests early in practical AI training, safe data access, public-sector capability and small business support. AI reduces paperwork and helps workers focus on higher-value tasks.
+          </p>
+          <p><strong>Likely result:</strong> stronger productivity growth, better service delivery and lower inequality risk.</p>
+        </div>
+        <div class="mini scenario downside">
+          <h3>Downside: fast adoption without protection</h3>
+          <p>
+            AI capability improves quickly, closer to the warning-style future in <em>AI 2027</em>. Firms use AI mainly to cut costs. Junior roles shrink and workplace monitoring increases.
+          </p>
+          <p><strong>Likely result:</strong> short-run efficiency, but weaker trust, higher insecurity and fewer entry-level learning pathways.</p>
+        </div>
+      </div>
+
+      <h3>Scenario comparison</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Main driver</th>
+            <th>Productivity effect</th>
+            <th>Employment / wage risk</th>
+            <th>Policy meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Baseline</td>
+            <td>Normal AI adoption, led by large organisations</td>
+            <td>Moderate improvement</td>
+            <td>Some workers benefit more than others</td>
+            <td>Training and small business support become important</td>
+          </tr>
+          <tr>
+            <td>Upside</td>
+            <td>AI is used to augment workers, not only cut labour costs</td>
+            <td>Strongest improvement</td>
+            <td>Lower risk because workers are trained and consulted</td>
+            <td>Best case requires active policy, not just technology</td>
+          </tr>
+          <tr>
+            <td>Downside</td>
+            <td>Fast capability growth plus weak governance</td>
+            <td>Short-term efficiency, long-term trust problems</td>
+            <td>Higher pressure on junior and routine digital work</td>
+            <td>Rules are needed for hiring, surveillance and high-risk decisions</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="policy" class="card">
+      <span class="tag">Policy Playbook</span>
+      <h2>What Australia should do</h2>
+      <p>
+        Australia should not respond to AI by banning it, but it should also not allow a “use it first, fix problems later” approach. My preferred approach is controlled adoption: encourage useful AI while protecting workers, privacy and fairness.
+      </p>
+
+      <div class="button-row">
+        <button class="policyBtn active" data-policy="balanced">Balanced package</button>
+        <button class="policyBtn" data-policy="training">Training first</button>
+        <button class="policyBtn" data-policy="trust">Trust and governance first</button>
+        <button class="policyBtn" data-policy="weak">Weak policy</button>
+      </div>
+
+      <div id="policyResult" class="policy-result"></div>
+
+      <h3>Policy actions</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Why it matters</th>
+            <th>Possible KPI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fund practical AI training for students, workers and small business owners</td>
+            <td>AI benefits are larger when workers know how to use tools safely and effectively</td>
+            <td>Share of workers completing recognised AI training</td>
+          </tr>
+          <tr>
+            <td>Require transparency in high-risk AI decisions</td>
+            <td>Workers and citizens should know when AI is used in hiring, performance reviews or public services</td>
+            <td>Number of agencies/firms publishing AI transparency statements</td>
+          </tr>
+          <tr>
+            <td>Support small business adoption</td>
+            <td>Otherwise productivity gains may be captured mainly by large firms</td>
+            <td>Small business AI adoption rate and reported time saved</td>
+          </tr>
+          <tr>
+            <td>Protect entry-level learning pathways</td>
+            <td>If AI removes junior tasks, young workers may lose the chance to learn basic professional skills</td>
+            <td>Graduate and entry-level hiring rates in exposed industries</td>
+          </tr>
+          <tr>
+            <td>Keep human review for high-impact decisions</td>
+            <td>AI errors and bias can create real economic and social harm</td>
+            <td>Share of high-risk decisions with documented human review</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="methods" class="card">
+      <span class="tag">Methods, Data and Limitations</span>
+      <h2>How I built this forecast</h2>
+      <p>
+        This forecast uses scenario analysis instead of one fixed prediction. I combine a fast AI capability scenario from <em>AI 2027</em> with Australian evidence from government and policy sources. I also create simple indices to show the mechanisms visually.
+      </p>
+      <h3>Data and assumptions</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Input</th>
+            <th>How I use it</th>
+            <th>Limitation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><em>AI 2027</em> timeline and scenario</td>
+            <td>Used as a stress test for fast AI capability growth</td>
+            <td>It is a forecast scenario, not a guaranteed future</td>
+          </tr>
+          <tr>
+            <td>ABS business AI R&amp;D spending</td>
+            <td>Shows that Australian firms are already increasing AI-related investment</td>
+            <td>R&amp;D spending does not directly measure job loss or productivity</td>
+          </tr>
+          <tr>
+            <td>Productivity Commission AI opportunity paper</td>
+            <td>Supports the idea that trust, data access and capability shape AI productivity gains</td>
+            <td>Policy effects are hard to measure before adoption is mature</td>
+          </tr>
+          <tr>
+            <td>OECD work on AI and workplaces</td>
+            <td>Used to discuss privacy, worker consultation and workplace pressure</td>
+            <td>OECD evidence is often cross-country, not Australia-only</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Uncertainty</h3>
+      <p>
+        The biggest uncertainty is the speed of AI capability growth. If AI progresses slowly, the baseline scenario is more likely. If AI progresses quickly, Australia could face pressure similar to the downside scenario unless policy moves earlier. Another uncertainty is that job exposure is not the same as job loss. A job can be exposed to AI and still grow if AI makes the service cheaper, faster or higher quality.
+      </p>
+      <p>
+        I also recognise that my charts use simplified scores. They are not official government forecasts. Their purpose is to make the causal logic clear: capability affects tasks, tasks affect productivity and wages, and policy changes how the gains and risks are distributed.
+      </p>
+
+      <h3>AI-enabled methods disclosure</h3>
+      <p>
+        I used ChatGPT to brainstorm the structure, simplify the language and generate early ideas for charts, scenarios and policy pathways. I reviewed, edited and reorganised the content myself. I checked the main evidence against external sources, including <em>AI 2027</em>, the Australian Bureau of Statistics, the Productivity Commission, the OECD and Australian Government materials. The final thesis, assumptions, scenario choices and website design decisions are my own.
+      </p>
+    </section>
+
+    <section id="references" class="card">
+      <span class="tag">References and Attributions</span>
+      <h2>References</h2>
+      <ul class="references">
+        <li>AI 2027. (2025). <em>Summary</em>. <a href="https://ai-2027.com/summary" target="_blank" rel="noopener">https://ai-2027.com/summary</a></li>
+        <li>AI 2027. (2025). <em>Timelines forecast</em>. <a href="https://ai-2027.com/research/timelines-forecast" target="_blank" rel="noopener">https://ai-2027.com/research/timelines-forecast</a></li>
+        <li>Australian Bureau of Statistics. (2025). <em>AI now fastest growing area for business R&amp;D</em>. <a href="https://www.abs.gov.au/media-centre/media-releases/ai-now-fastest-growing-area-business-rd" target="_blank" rel="noopener">https://www.abs.gov.au/media-centre/media-releases/ai-now-fastest-growing-area-business-rd</a></li>
+        <li>Australian Government Department of Industry, Science and Resources. (2025). <em>National AI Plan</em>. <a href="https://www.industry.gov.au/publications/national-ai-plan" target="_blank" rel="noopener">https://www.industry.gov.au/publications/national-ai-plan</a></li>
+        <li>Australian Public Service. (2025). <em>AI Plan for the Australian Public Service 2025</em>. <a href="https://www.digital.gov.au/policy/ai/australian-public-service-ai-plan-2025" target="_blank" rel="noopener">https://www.digital.gov.au/policy/ai/australian-public-service-ai-plan-2025</a></li>
+        <li>OECD. (2025). <em>AI and work</em>. <a href="https://www.oecd.org/en/topics/sub-issues/ai-and-work.html" target="_blank" rel="noopener">https://www.oecd.org/en/topics/sub-issues/ai-and-work.html</a></li>
+        <li>Productivity Commission. (2025). <em>Making the most of the AI opportunity: AI uptake, productivity, and the role of government</em>. <a href="https://assets.pc.gov.au/2025-10/ai-paper1-productivity.pdf" target="_blank" rel="noopener">https://assets.pc.gov.au/2025-10/ai-paper1-productivity.pdf</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p><strong>ECON1626 AI Future Forecast</strong> · Public interactive web essay · Created for GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script>
+    const years = ["2026", "2027", "2028", "2029", "2030"];
+
+    const scenarioData = {
+      labels: years,
+      datasets: [
+        {
+          label: "Baseline adoption",
+          data: [20, 32, 45, 56, 65],
+          borderWidth: 3,
+          tension: 0.3
+        },
+        {
+          label: "Upside adoption",
+          data: [20, 38, 58, 74, 85],
+          borderWidth: 3,
+          tension: 0.3
+        },
+        {
+          label: "Downside fast adoption",
+          data: [20, 45, 68, 78, 88],
+          borderWidth: 3,
+          tension: 0.3
+        }
+      ]
+    };
+
+    const scenarioChart = new Chart(document.getElementById("scenarioChart"), {
+      type: "line",
+      data: scenarioData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: "bottom" },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ": " + context.raw + "/100";
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: "AI adoption index" }
+          }
+        }
+      }
+    });
+
+    const industryChart = new Chart(document.getElementById("industryChart"), {
+      type: "bar",
+      data: {
+        labels: ["Finance", "Professional services", "Education", "Health admin", "Retail service", "Personal care", "Construction"],
+        datasets: [{
+          label: "Task exposure score",
+          data: [76, 72, 63, 58, 54, 32, 26],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return "Exposure score: " + context.raw + "/100";
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: "Exposure index" }
+          }
+        }
+      }
+    });
+
+    const training = document.getElementById("training");
+    const governance = document.getElementById("governance");
+    const trainingValue = document.getElementById("trainingValue");
+    const governanceValue = document.getElementById("governanceValue");
+    const productivityOut = document.getElementById("productivityOut");
+    const inequalityOut = document.getElementById("inequalityOut");
+    const trustOut = document.getElementById("trustOut");
+    const policyOut = document.getElementById("policyOut");
+
+    function updateSimulation() {
+      const t = Number(training.value);
+      const g = Number(governance.value);
+      trainingValue.textContent = t;
+      governanceValue.textContent = g;
+
+      const productivity = 2.5 + (t * 0.065) + (g * 0.035);
+      const inequality = Math.max(5, Math.round(72 - (t * 0.34) - (g * 0.24)));
+      const trust = Math.min(100, Math.round(25 + (t * 0.25) + (g * 0.55)));
+      const scoreValue = (productivity * 5) + trust - inequality;
+      let grade = "C";
+      if (scoreValue > 98) grade = "A";
+      else if (scoreValue > 78) grade = "B";
+      else if (scoreValue > 58) grade = "C";
+      else grade = "D";
+
+      productivityOut.textContent = productivity.toFixed(1);
+      inequalityOut.textContent = inequality;
+      trustOut.textContent = trust;
+      policyOut.textContent = grade;
+    }
+
+    training.addEventListener("input", updateSimulation);
+    governance.addEventListener("input", updateSimulation);
+    updateSimulation();
+
+    const policyText = {
+      balanced: {
+        title: "Balanced package",
+        body: "This is my preferred pathway. It combines AI training, small business support, transparency rules and human review for high-impact decisions. It gives Australia the best chance of getting productivity gains without creating a large trust problem."
+      },
+      training: {
+        title: "Training first",
+        body: "This improves worker capability quickly. It is useful for students, graduates and exposed occupations, but it is not enough by itself. Without governance, workers may still worry about surveillance, bias and unfair use of AI."
+      },
+      trust: {
+        title: "Trust and governance first",
+        body: "This reduces risk in hiring, public services and workplace monitoring. The weakness is that too much caution without practical training may slow adoption and reduce productivity gains."
+      },
+      weak: {
+        title: "Weak policy",
+        body: "This leaves firms to adopt AI however they want. It may look efficient in the short run, but it risks greater inequality, low worker trust and messy regulation later when problems become harder to fix."
+      }
+    };
+
+    const policyResult = document.getElementById("policyResult");
+    const buttons = document.querySelectorAll(".policyBtn");
+
+    function setPolicy(name) {
+      const item = policyText[name];
+      policyResult.innerHTML = `<h3>${item.title}</h3><p>${item.body}</p>`;
+      buttons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.policy === name);
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => setPolicy(btn.dataset.policy));
+    });
+
+    setPolicy("balanced");
+  </script>
+</body>
+</html>
